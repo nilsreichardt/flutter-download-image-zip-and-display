@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_archive/flutter_archive.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
@@ -44,13 +44,12 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: SafeArea(
         child: TextButton(
           onPressed: () async {
-            final response = await Dio().get(
-              'YOUR-FILE-URL',
-              options: Options(responseType: ResponseType.bytes),
+            final response = await http.get(
+              Uri.parse('YOUR-IMAGE-URL'),
             );
             final tempDir = await syspaths.getTemporaryDirectory();
             final zipFile = File('${tempDir.path}/images.zip');
-            await zipFile.writeAsBytes(response.data);
+            await zipFile.writeAsBytes(response.bodyBytes);
 
             print("Downloaded zip file");
 
